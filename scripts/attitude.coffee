@@ -22,6 +22,7 @@ module.exports = (robot) ->
 
   robot.hear /.*/, (msg) ->
     post = msg.match[0]
+    console.dir(msg)
     if (post.length > 400)
       msg.send "Cool story, bro!"
 
