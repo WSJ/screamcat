@@ -20,10 +20,9 @@ module.exports = (robot) ->
   robot.respond /poor showing/i, (msg) ->
     msg.send "Sorry. I'm only as good as my input. :("
 
-  robot.hear /.*/, (msg) ->
-    post = msg.match[0]
-    console.dir(msg)
-    if (post.length > 400)
+  robot.hear /(.*)/, (msg) ->
+    postlength = msg.match[1].length
+    if (postlength > 400)
       msg.send "Cool story, bro!"
 
   robot.enter (msg) ->
