@@ -25,7 +25,7 @@ module.exports = (robot) ->
     msg.send msg.random sadtrombones
 
   robot.respond /nice one/i, (msg) ->
-    msg.send "Thanks! http://times.github.io/screamcat/niceone.gif"
+    msg.send "Thanks! http://i.imgur.com/bA2Xnmk.gif"
 
   robot.hear /.+/i, (msg) ->
     if (msg.match[0].length > 400)
