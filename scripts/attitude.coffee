@@ -13,12 +13,12 @@
 
 enterReplies = ["Words do not express my excitement.", "Welcome to the party!"]
 leaveReplies = [":'(", ":scream_cat: Nooooooooo! Anything but that!"]
-sadtrombones = ["Sorry. I'm only as good as my input. :(", "Oh, come on. I've only made #{fails} mistakes!", "Well, win some, lose some..."]
 
 module.exports = (robot) ->
 
   robot.respond /(poor showing|fail|godammit|ffs)/ig, (msg) ->
     fails = robot.brain.get('hubotFails') * 1 or 0 
+    sadtrombones = ["Sorry. I'm only as good as my input. :(", "Oh, come on. I've only made #{fails} mistakes!", "Well, win some, lose some..."]
     robot.brain.set 'hubotFails', fails+1
     msg.send msg.random sadtrombones
 
