@@ -9,6 +9,7 @@
 #
 # Commands:
 #   hubot poor showing|fail|goddammit|boooo|ffs -- Responds with apology.
+#   hubot nice one -- Responds with ridiculous video from "Human Traffic"
 #   <post over 400 characters> -- Responds with "Cool story, bro."
 #   <user enters or leaves room> -- Acts melodramatically.
 
@@ -22,6 +23,9 @@ module.exports = (robot) ->
     sadtrombones = ["Sorry. I'm only as good as my input. :(", "Oh, come on. I've only made #{fails} mistakes!", "Well, win some, lose some..."]
     robot.brain.set 'hubotFails', fails+1
     msg.send msg.random sadtrombones
+
+  robot.respond /nice one/i, (msg) ->
+    msg.send "Thanks! http://times.github.io/screamcat/niceone.gif"
 
   robot.hear /.+/i, (msg) ->
     if (msg.match[0].length > 400)
