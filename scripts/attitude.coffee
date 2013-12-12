@@ -8,15 +8,16 @@
 #   None
 #
 # Commands:
-#   hubot poor showing -- Responds with "Sorry. :("
-#   <post over 400 characters> -- Responds with "Cool story, bro." (Doesn't seem to work at present)
+#   hubot poor showing|fail|goddammit|boooo|ffs -- Responds with apology.
+#   <post over 400 characters> -- Responds with "Cool story, bro."
+#   <user enters or leaves room> -- Acts melodramatically.
 
 enterReplies = ["Words do not express my excitement.", "Welcome to the party!"]
 leaveReplies = [":'(", ":scream_cat: Nooooooooo! Anything but that!"]
 
 module.exports = (robot) ->
 
-  robot.respond /(poor showing|fail|godammit|ffs)/ig, (msg) ->
+  robot.respond /(poor showing|fail|godd?amm?it|ffs|boo[o]*)/i, (msg) ->
     fails = robot.brain.get('hubotFails') * 1 or 0 
     sadtrombones = ["Sorry. I'm only as good as my input. :(", "Oh, come on. I've only made #{fails} mistakes!", "Well, win some, lose some..."]
     robot.brain.set 'hubotFails', fails+1
