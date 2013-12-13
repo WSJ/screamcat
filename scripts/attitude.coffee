@@ -10,6 +10,7 @@
 # Commands:
 #   hubot poor showing|fail|goddammit|boooo|ffs -- Responds with apology.
 #   hubot nice one -- Responds with ridiculous video from "Human Traffic"
+#   hubot QoS -- Responds with how many times it has failed.
 #   <post over 400 characters> -- Responds with "Cool story, bro."
 #   <user enters or leaves room> -- Acts melodramatically.
 
@@ -26,6 +27,10 @@ module.exports = (robot) ->
 
   robot.respond /nice one/i, (msg) ->
     msg.send "Thanks! http://i.imgur.com/bA2Xnmk.gif"
+
+  robot.respond /(QoS|Quality of Service)/i, (msg) ->
+    fails = robot.brain.get('hubotFails') * 1 or 0 
+    msg.send "I've been a bad kitty #{fails} times. :crying_cat_face:"
 
   robot.hear /.+/i, (msg) ->
     if (msg.match[0].length > 400)
