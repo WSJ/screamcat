@@ -15,7 +15,11 @@
 #   <user enters or leaves room> -- Acts melodramatically.
 
 enterReplies = ["Words do not express my excitement.", "Welcome to the party!"]
+
 leaveReplies = [":'(", ":scream_cat: Nooooooooo! Anything but that!"]
+
+thanksMessages = ["Thanks! http://i.imgur.com/bA2Xnmk.gif"]
+
 
 module.exports = (robot) ->
 
@@ -26,7 +30,7 @@ module.exports = (robot) ->
     msg.send msg.random sadtrombones
 
   robot.respond /nice one/i, (msg) ->
-    msg.send "Thanks! http://i.imgur.com/bA2Xnmk.gif"
+    msg.send msg.random thanksMessages
 
   robot.respond /(QoS|Quality of Service)/i, (msg) ->
     fails = robot.brain.get('hubotFails') * 1 or 0 

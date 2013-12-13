@@ -27,5 +27,6 @@
 	"itcrowd.coffee",
 	"isup.coffee",
 	"news.coffee",
-	"likeaboss.coffee"
+	"likeaboss.coffee",
+	"giphy.coffee"
 ]
