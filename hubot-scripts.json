@@ -17,7 +17,7 @@
 	"flip.coffee",
 	"nationalrail.coffee",
 	"edballs.coffee",
-	"plusplus.coffee",
+	"karma.coffee",
 	"calm-down.coffee",
 	"replygif.coffee",
 	"nickgen.coffee",
@@ -25,5 +25,7 @@
 	"working-on.coffee",
 	"meme_captain.coffee",
 	"itcrowd.coffee",
-	"isup.coffee"
+	"isup.coffee",
+	"news.coffee",
+	"likeaboss.coffee"
 ]
