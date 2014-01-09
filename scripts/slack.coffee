@@ -87,7 +87,7 @@ class Slack extends Adapter
       team  : process.env.HUBOT_SLACK_TEAM
       name  : process.env.HUBOT_SLACK_BOTNAME or 'slackbot'
       channelmode: process.env.HUBOT_SLACK_CHANNELMODE or 'blacklist'
-      channels: process.env.HUBOT_SLACK_CHANNELS.split(',') or []
+      channels: process.env.HUBOT_SLACK_CHANNELS
 
   getMessageFromRequest: (req) ->
     # Parse the payload
@@ -122,8 +122,8 @@ class Slack extends Adapter
       author = self.getAuthorFromRequest req
 
       if hubotMsg and author
-        if (@options.channelmode is 'blacklist' and author.room not in @options.channels) or 
-        (@options.channelmode is 'whitelist' and author.room in @options.channels)
+        if (@options.channelmode is 'blacklist' and author.room not in @options.channels.split(',')) or 
+        (@options.channelmode is 'whitelist' and author.room in @options.channels.split(','))
           # Pass to the robot
           self.log "Received #{hubotMsg} from #{author.name}"
           self.receive new TextMessage(author, hubotMsg)
