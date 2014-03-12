@@ -96,7 +96,7 @@ module.exports = (robot) ->
     memeGenerator msg, 'http://memecaptain.com/philosoraptor.jpg', msg.match[1], msg.match[2] + (if msg.match[2].search(/\?$/)==(-1) then '?' else ''), (url) ->
       msg.send url
 
-  robot.respond /(.*?)(AIN'T (NOBODY)? GOT TIME FOR THAT.*)/i, (msg) ->
+  robot.respond /(.*)(AIN'T (NOBODY)? GOT TIME FOR THAT.*)/i, (msg) ->
   	memeGenerator msg, 'http://i1.ytimg.com/vi/waEC-8GFTP4/maxresdefault.jpg', msg.match[1], msg.match[2], (url) ->
   		msg.send url
 
