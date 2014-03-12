@@ -97,7 +97,7 @@ module.exports = (robot) ->
       msg.send url
 
   robot.respond /(.*)(GOT TIME FOR THAT.*)/i, (msg) ->
-  	memeGenerator msg, 'http://i1.ytimg.com/vi/waEC-8GFTP4/maxresdefault.jpg', msg.match[1], msg.match[2], (url) ->
+  	memeGenerator msg, 'http://i1.ytimg.com/vi/waEC-8GFTP4/maxresdefault.jpg', msg.match[1], "Ain't nobody got time for that!", (url) ->
   		msg.send url
 
 
