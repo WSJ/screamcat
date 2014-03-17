@@ -6,10 +6,12 @@
 #
 
 module.exports = (robot) ->
-  robot.respond /Is Aendrew available (?:to help)?\?$/i, (msg) ->
-    msg.send "No."
+  robot.respond /^Is (.*)? available (?:to help)?\??$/i, (msg) ->
+    if (msg.match[1].toLowerCase() == "aendrew")
+      msg.send "No."
+    else
+      msg.send "Check with Nick or Pat."
 
-  robot.respond /^Is (?!aendrew)(.*) available (?:to help)?\?$/i, (msg) ->
-    msg.send "Check with Nick or Pat."
+
     
 
