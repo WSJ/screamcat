@@ -36,8 +36,7 @@
 #     7. The JSON response returned will include your access and refresh tokens
 #
 # Commands:
-#   hubot is aendrew.rininsland@the-times.co.uk busy at 12:00 pm?
-#   hubot is aendrew.rininsland@the-times.co.uk free at 12:00 pm?
+#   hubot is {full-google-apps-email-address} busy at 12:00 pm?
 #
 # ToDo:
 #   + Add support for using Slack usernames instead of emails.
