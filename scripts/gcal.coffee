@@ -57,16 +57,20 @@ module.exports = (robot) ->
         user = Object.keys(client.calendars)[0];
         if (client.calendars[user].busy.length > 0)
           if (not is_inverted)
-            msg.send "#{user} is busy from: "
+            strings = ["#{user} is busy from:"]
             client.calendars[user].busy
               .forEach (value) ->
-                msg.send moment(value.start).format("h:mm a") + " until " + moment(value.end).format("h:mm a")
+                strings.push(moment(value.start).format("h:mm a") + " until " + moment(value.end).format("h:mm a"))
           else # Inverted format.
-            msg.send "#{user} is busy from: "
+            strings = "#{user} is busy from: "
             client.calendars[user].busy
               .forEach (value) ->
-                msg.send moment(value.start).format("h:mm a") + " until " + moment(value.end).format("h:mm a")
-        else
+                strings.push(moment(value.start).format("h:mm a") + " until " + moment(value.end).format("h:mm a"))
+
+          # Finally, send the response...
+          msg.send strings.join("\n")
+          
+        else # No events found.
           if (not is_inverted)
             msg.send "Nope, #{user} is available."
           else # Inverted format.
@@ -84,7 +88,7 @@ module.exports = (robot) ->
       else
         startTime = moment(msg.match[3], "HH:mm")
       if not startTime.isValid()
-        msg.send "Not a valid date!"
+        msg.send "Not a valid time!"
         return
 
       endTime = startTime.clone().add('hours', 1)
