@@ -7,7 +7,6 @@
 # Dependencies:
 #   googleapis
 #   moment
-#   node-promise
 #
 # Configuration:
 #   GOOGLE_CLIENT_ID: Client ID for your Google API app
@@ -102,11 +101,12 @@ module.exports = (robot) ->
       email = ''
       robot.http("https://slack.com/api/users.list?token=" + process.env.SLACK_API_TOKEN)
         .get() (err, res, body) ->
-          console.dir(body)
           if body.ok == true
             user = res.members.map() ->
               return this.name == username.slice(1)
             email = user.profile.email
+            console.log('successful')
+            console.dir(user)
 
     else
       email = username
