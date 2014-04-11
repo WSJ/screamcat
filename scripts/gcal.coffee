@@ -83,7 +83,8 @@ module.exports = (robot) ->
           if body.ok == true
             username = if username.charAt(0) == '@' then username.slice(1) else username #Remove @ symbol
             user = res.members.map() ->
-              this.name == username
+              return this.name == username
+            console.log(user.profile.email)
             deferred.resolve(user.profile.email)
       return deferred.promise
 
