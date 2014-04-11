@@ -80,8 +80,8 @@ module.exports = (robot) ->
       deferred = defer()
       robot.http("https://slack.com/api/users.list?token=" + process.env.SLACK_API_TOKEN)
         .get() (err, res, body) ->
+          console.dir(body)
           if body.ok == true
-            username = if username.charAt(0) == '@' then username.slice(1) else username #Remove @ symbol
             user = res.members.map() ->
               return this.name == username
             console.log(user.profile.email)
