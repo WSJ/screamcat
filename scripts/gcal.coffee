@@ -99,6 +99,7 @@ module.exports = (robot) ->
     # Parse username...
     if username.charAt(0) == "@"
       httpsync = require('httpsync')
+      console.log("https://slack.com/api/users.list?token=" + process.env.SLACK_API_TOKEN)
       req = httpsync.get("https://slack.com/api/users.list?token=" + process.env.SLACK_API_TOKEN)
       res = req.end()
       user = res.members.map() ->
