@@ -36,11 +36,9 @@
 #     7. The JSON response returned will include your access and refresh tokens
 #
 # Commands:
-#   hubot is aendrew.rininsland@the-times.co.uk busy at 12:00 pm?
-#   hubot is aendrew.rininsland@the-times.co.uk free at 12:00 pm?
+#   hubot is {Slack username or Email} busy at 12:00 pm?
 #
 # ToDo:
-#   + Add support for using Slack usernames instead of emails.
 #   + Add more ability to use either "busy" or its inverse "available".
 #   + Add ranges for time slots.
 #
@@ -69,19 +67,20 @@ module.exports = (robot) ->
 
           # Finally, send the response...
           msg.send strings.join("\n")
-          
+
         else # No events found.
           if (not is_inverted)
             msg.send "Nope, #{user} is available."
           else # Inverted format.
             msg.send "Yes, #{user} is free."
 
-    moment = require('moment')
+    # End helper functions, start main procedure
 
     username = msg.match[1]
     is_inverted = if msg.match[2] == "free" then true else false
 
     # Parse timestamps...
+    moment = require('moment')
     if msg.match[3] # Timestamp supplied, parse it...
       if msg.match[3].match(/[ap]\.?m\.?/i) # Handle 12/24h...
         startTime = moment(msg.match[3], "hh:mm a")
@@ -90,30 +89,20 @@ module.exports = (robot) ->
       if not startTime.isValid()
         msg.send "Not a valid time!"
         return
-
       endTime = startTime.clone().add('hours', 1)
 
     else # No timestamp supplied, use now.
       startTime = moment() # i.e., "now".
       endTime = startTime.clone().add('hours', 1)
 
-    # Parse username...
-    if username.charAt(0) == "@"
-      #email = get_email(username)
-      msg.send "Support for usernames is coming. Please use email instead."
-      return
-    else
-      email = username
-
     details =
       items: [
-        id: email
+        id: ''
       ],
       timeMax: endTime.format(), # DateTime in RFC3339 format (I.e., "yyyy-mm-ddThh:mm:ssZ")
       timeMin: startTime.format() # Ditto.
 
     googleapis = require('googleapis')
-
     clientID = process.env.GOOGLE_CLIENT_ID
     secret = process.env.GOOGLE_CLIENT_SECRET
     redirectURI = process.env.GOOGLE_REDIRECT_URI
@@ -125,7 +114,24 @@ module.exports = (robot) ->
     googleapis.discover('calendar', 'v3')
       .execute (err, client) ->
         handleResponse(err, client)
-        client.calendar.freebusy.query(details)
-          .withAuthClient(oauth2Client)
-          .execute (err, client) ->
-            handleResponse(err, client)
+
+        # Fork based on username format...
+        if username.charAt(0) == "@"
+          req = robot
+            .http('https://slack.com/api/users.list?token=' + process.env.SLACK_API_TOKEN)
+            .header('Accept', 'application/json')
+            .get() (err, res, body) ->
+              data = JSON.parse(body)
+              user = data.members.filter (v) ->
+                return v.name == username.slice(1)
+              details.items[0].id = user[0].profile.email
+              client.calendar.freebusy.query(details)
+                .withAuthClient(oauth2Client)
+                .execute (err, client) ->
+                  handleResponse(err, client)
+        else
+          details.items[0].id = username
+          client.calendar.freebusy.query(details)
+            .withAuthClient(oauth2Client)
+            .execute (err, client) ->
+              handleResponse(err, client)
