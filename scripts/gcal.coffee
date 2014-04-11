@@ -7,6 +7,7 @@
 # Dependencies:
 #   googleapis
 #   moment
+#   node-promise
 #
 # Configuration:
 #   GOOGLE_CLIENT_ID: Client ID for your Google API app
@@ -36,11 +37,9 @@
 #     7. The JSON response returned will include your access and refresh tokens
 #
 # Commands:
-#   hubot is aendrew.rininsland@the-times.co.uk busy at 12:00 pm?
-#   hubot is aendrew.rininsland@the-times.co.uk free at 12:00 pm?
+#   hubot is {Slack username or Email} busy at 12:00 pm?
 #
 # ToDo:
-#   + Add support for using Slack usernames instead of emails.
 #   + Add more ability to use either "busy" or its inverse "available".
 #   + Add ranges for time slots.
 #
@@ -69,19 +68,32 @@ module.exports = (robot) ->
 
           # Finally, send the response...
           msg.send strings.join("\n")
-          
+
         else # No events found.
           if (not is_inverted)
             msg.send "Nope, #{user} is available."
           else # Inverted format.
             msg.send "Yes, #{user} is free."
 
-    moment = require('moment')
+    getEmail = (username) ->
+      defer = require("promise").defer
+      deferred = defer()
+      robot.http("https://slack.com/api/users.list?token=" + process.env.SLACK_API_TOKEN)
+        .get() (err, res, body) ->
+          if body.ok == true
+            username = if username.charAt(0) == '@' then username.slice(1) else username #Remove @ symbol
+            user = res.members.map() ->
+              this.name == username
+            deferred.resolve(user.profile.email)
+      return deferred.promise
+
+    # End helper functions, start main procedure
 
     username = msg.match[1]
     is_inverted = if msg.match[2] == "free" then true else false
 
     # Parse timestamps...
+    moment = require('moment')
     if msg.match[3] # Timestamp supplied, parse it...
       if msg.match[3].match(/[ap]\.?m\.?/i) # Handle 12/24h...
         startTime = moment(msg.match[3], "hh:mm a")
@@ -99,9 +111,7 @@ module.exports = (robot) ->
 
     # Parse username...
     if username.charAt(0) == "@"
-      #email = get_email(username)
-      msg.send "Support for usernames is coming. Please use email instead."
-      return
+      email = getEmail(username)
     else
       email = username
 
