@@ -75,16 +75,6 @@ module.exports = (robot) ->
           else # Inverted format.
             msg.send "Yes, #{user} is free."
 
-    getEmail = (username) ->
-      robot.http("https://slack.com/api/users.list?token=" + process.env.SLACK_API_TOKEN)
-        .get() (err, res, body) ->
-          console.dir(body)
-          if body.ok == true
-            user = res.members.map() ->
-              return this.name == username.slice(1)
-            console.log(user.profile.email)
-            deferred.resolve(user.profile.email)
-
     # End helper functions, start main procedure
 
     username = msg.match[1]
@@ -109,10 +99,15 @@ module.exports = (robot) ->
 
     # Parse username...
     if username.charAt(0) == "@"
-      defer = require("promise").defer
-      deferred = defer()
-      getEmail(username)
-      email = deferred.promise
+      email = ''
+      robot.http("https://slack.com/api/users.list?token=" + process.env.SLACK_API_TOKEN)
+        .get() (err, res, body) ->
+          console.dir(body)
+          if body.ok == true
+            user = res.members.map() ->
+              return this.name == username.slice(1)
+            email = user.profile.email
+
     else
       email = username
 
