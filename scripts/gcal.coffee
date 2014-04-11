@@ -89,36 +89,21 @@ module.exports = (robot) ->
       if not startTime.isValid()
         msg.send "Not a valid time!"
         return
-
       endTime = startTime.clone().add('hours', 1)
 
     else # No timestamp supplied, use now.
       startTime = moment() # i.e., "now".
       endTime = startTime.clone().add('hours', 1)
 
-    # Parse username...
-    if username.charAt(0) == "@"
-      httpsync = require('httpsync')
-      req = httpsync.get("https://slack.com/api/users.list?token=" + process.env.SLACK_API_TOKEN)
-      res = req.end()
-      console.log(req)
-      user = res.members.map() ->
-        return this.name == username.slice(1)
-      email = user.profile.email
-      console.dir(user)
-
-    else
-      email = username
-
     details =
       items: [
-        id: email
+        id: ''
       ],
       timeMax: endTime.format(), # DateTime in RFC3339 format (I.e., "yyyy-mm-ddThh:mm:ssZ")
       timeMin: startTime.format() # Ditto.
-    console.dir(details)
-    googleapis = require('googleapis')
+    ]
 
+    googleapis = require('googleapis')
     clientID = process.env.GOOGLE_CLIENT_ID
     secret = process.env.GOOGLE_CLIENT_SECRET
     redirectURI = process.env.GOOGLE_REDIRECT_URI
@@ -130,7 +115,21 @@ module.exports = (robot) ->
     googleapis.discover('calendar', 'v3')
       .execute (err, client) ->
         handleResponse(err, client)
-        client.calendar.freebusy.query(details)
-          .withAuthClient(oauth2Client)
-          .execute (err, client) ->
-            handleResponse(err, client)
+
+        # Fork based on username format...
+        if username.charAt(0) == "@"
+          req = robot.http('http://slack.com/api/users.list?token=' + process.env.SLACK_API_TOKEN)
+            .get() (err, res, body) ->
+              user = res.members.map() ->
+                return this.name == username.slice(1)
+              details.items[0].id = user.profile.email
+              client.calendar.freebusy.query(details)
+                .withAuthClient(oauth2Client)
+                .execute (err, client) ->
+                  handleResponse(err, client)
+        else
+          details.items[0].id = username
+          client.calendar.freebusy.query(details)
+            .withAuthClient(oauth2Client)
+            .execute (err, client) ->
+              handleResponse(err, client)
