@@ -121,8 +121,9 @@ module.exports = (robot) ->
             .get() (err, res, body) ->
               user = res.members.map() ->
                 return this.name == username.slice(1)
-
               details.items[0].id = user.profile.email
+              console.dir(details)
+              console.dir(user)
               client.calendar.freebusy.query(details)
                 .withAuthClient(oauth2Client)
                 .execute (err, client) ->
