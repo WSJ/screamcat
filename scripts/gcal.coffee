@@ -76,9 +76,9 @@ module.exports = (robot) ->
             msg.send "Yes, #{user} is free."
 
     getEmail = (username) ->
-      console.log('Fetching ' + username)
       defer = require("promise").defer
       deferred = defer()
+      console.dir(deferred)
       robot.http("https://slack.com/api/users.list?token=" + process.env.SLACK_API_TOKEN)
         .get() (err, res, body) ->
           console.dir(body)
@@ -123,8 +123,7 @@ module.exports = (robot) ->
       ],
       timeMax: endTime.format(), # DateTime in RFC3339 format (I.e., "yyyy-mm-ddThh:mm:ssZ")
       timeMin: startTime.format() # Ditto.
-    console.dir(details)
-    
+
     googleapis = require('googleapis')
 
     clientID = process.env.GOOGLE_CLIENT_ID
