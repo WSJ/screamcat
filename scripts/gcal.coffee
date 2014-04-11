@@ -98,14 +98,13 @@ module.exports = (robot) ->
 
     # Parse username...
     if username.charAt(0) == "@"
-      email = ''
-      robot.http("https://slack.com/api/users.list?token=" + process.env.SLACK_API_TOKEN)
-        .get() (err, res, body) ->
-          user = res.members.map() ->
-            return this.name == username.slice(1)
-          email = user.profile.email
-          console.log('successful')
-          console.dir(user)
+      httpsync = require('httpsync')
+      req = httpsync.get("https://slack.com/api/users.list?token=" + process.env.SLACK_API_TOKEN)
+      res = req.end()
+      user = res.members.map() ->
+        return this.name == username.slice(1)
+      email = user.profile.email
+      console.dir(user)
 
     else
       email = username
