@@ -31,7 +31,7 @@
     "flip": "~0.1.0",
     "jsdom": "0.2.14",
     "moment": "~2.5.1",
-    "googleapis": "~0.7.0",
+    "googleapis": "~0.7.0"
   },
   "engines": {
     "node": ">= 0.8.x",
