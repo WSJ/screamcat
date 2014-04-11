@@ -119,7 +119,8 @@ module.exports = (robot) ->
         if username.charAt(0) == "@"
           req = robot.http('http://slack.com/api/users.list?token=' + process.env.SLACK_API_TOKEN)
             .get() (err, res, body) ->
-              user = res.members.map() ->
+              console.log(body)
+              user = body.members.map() ->
                 return this.name == username.slice(1)
               details.items[0].id = user.profile.email
               console.dir(details)
