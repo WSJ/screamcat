@@ -101,7 +101,6 @@ module.exports = (robot) ->
       ],
       timeMax: endTime.format(), # DateTime in RFC3339 format (I.e., "yyyy-mm-ddThh:mm:ssZ")
       timeMin: startTime.format() # Ditto.
-    ]
 
     googleapis = require('googleapis')
     clientID = process.env.GOOGLE_CLIENT_ID
@@ -122,6 +121,7 @@ module.exports = (robot) ->
             .get() (err, res, body) ->
               user = res.members.map() ->
                 return this.name == username.slice(1)
+
               details.items[0].id = user.profile.email
               client.calendar.freebusy.query(details)
                 .withAuthClient(oauth2Client)
