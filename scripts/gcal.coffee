@@ -101,7 +101,7 @@ module.exports = (robot) ->
       httpsync = require('httpsync')
       req = httpsync.get("https://slack.com/api/users.list?token=" + process.env.SLACK_API_TOKEN)
       res = req.end()
-      console.log(res)
+      console.log(req)
       user = res.members.map() ->
         return this.name == username.slice(1)
       email = user.profile.email
