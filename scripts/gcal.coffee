@@ -122,12 +122,11 @@ module.exports = (robot) ->
             .header('Accept', 'application/json')
             .get() (err, res, body) ->
               data = JSON.parse(body)
-              console.dir(data)
+              console.log(username.slice(1))
               user = data.members.filter (v) ->
                 return v.name == username.slice(1)
-              details.items[0].id = user.profile.email
-              console.dir(user)
-              
+              console.dir(user[0])
+              details.items[0].id = user[0].profile.email
               client.calendar.freebusy.query(details)
                 .withAuthClient(oauth2Client)
                 .execute (err, client) ->
