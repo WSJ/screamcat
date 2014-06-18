@@ -55,7 +55,9 @@ module.exports = (robot) ->
         return
       else if (client.calendars) # Parse through busy events...
         user = Object.keys(client.calendars)[0];
+
         if (client.calendars[user].busy.length)
+          console.log('busy in user calendar')
           if (not is_inverted)
             strings = ["#{user} is busy from:"]
             client.calendars[user].busy
@@ -71,6 +73,7 @@ module.exports = (robot) ->
           msg.send strings.join("\n")
 
         else if (client.calendars[vacation_cal].busy.length)
+          console.log('busy in vacation calendar')
           if (not is_inverted)
             strings = ["#{user} is busy from:"]
             client.calendars[vacation_cal].busy
