@@ -56,7 +56,6 @@ module.exports = (robot) ->
       else if (client.calendars) # Parse through busy events...
         user = Object.keys(client.calendars)[0];
         if (client.calendars[user].busy.length)
-          console.log('busy in user calendar')
           if (not is_inverted)
             strings = ["#{user} is busy from:"]
             client.calendars[user].busy
@@ -72,20 +71,7 @@ module.exports = (robot) ->
           msg.send strings.join("\n")
 
         else if (client.calendars[vacation_cal].busy.length)
-          console.log('busy in vacation calendar')
-          if (not is_inverted)
-            strings = ["#{user} is busy from:"]
-            client.calendars[vacation_cal].busy
-              .forEach (value) ->
-                strings.push(moment(value.start).format("h:mm a") + " until " + moment(value.end).format("h:mm a"))
-          else # Inverted format.
-            strings = "#{user} is busy from: "
-            client.calendars[vacation_cal].busy
-              .forEach (value) ->
-                strings.push(moment(value.start).format("h:mm a") + " until " + moment(value.end).format("h:mm a"))
-
-          # Finally, send the response...
-          msg.send strings.join("\n")
+          msg.send strings.join("#{user} is on vacation, bruv!")
 
         else # No events found.
           if (not is_inverted)
