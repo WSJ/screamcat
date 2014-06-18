@@ -55,7 +55,6 @@ module.exports = (robot) ->
         return
       else if (client.calendars) # Parse through busy events...
         user = Object.keys(client.calendars)[0];
-
         if (client.calendars[user].busy.length)
           console.log('busy in user calendar')
           if (not is_inverted)
@@ -117,8 +116,8 @@ module.exports = (robot) ->
 
     details =
       items: [
-        id: '',
-        id: vacation_cal
+        {id: ''},
+        {id: vacation_cal}
       ],
       timeMax: endTime.format(), # DateTime in RFC3339 format (I.e., "yyyy-mm-ddThh:mm:ssZ")
       timeMin: startTime.format() # Ditto.
