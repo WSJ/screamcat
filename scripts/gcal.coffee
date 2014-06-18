@@ -45,6 +45,8 @@
 # Author:
 #   aendrew, based on gcal.coffee by lazerwalker
 
+vacation_cal = 'newsint.co.uk_ukm0mhaetii2ga6520s8un906c@group.calendar.google.com'
+
 module.exports = (robot) ->
   robot.respond /Is (.*?) (free|busy)(?: at ([\d:\sapm.]*)?)?[?]?/i, (msg) ->
     handleResponse = (err, client) ->
@@ -53,7 +55,7 @@ module.exports = (robot) ->
         return
       else if (client.calendars) # Parse through busy events...
         user = Object.keys(client.calendars)[0];
-        if (client.calendars[user].busy.length > 0)
+        if (client.calendars[user].busy.length > 0 or client.calendars[vacation_cal].busy.length > 0)
           if (not is_inverted)
             strings = ["#{user} is busy from:"]
             client.calendars[user].busy
@@ -98,7 +100,7 @@ module.exports = (robot) ->
     details =
       items: [
         id: '',
-        id: 'newsint.co.uk_ukm0mhaetii2ga6520s8un906c@group.calendar.google.com'
+        id: vacation_cal
       ],
       timeMax: endTime.format(), # DateTime in RFC3339 format (I.e., "yyyy-mm-ddThh:mm:ssZ")
       timeMin: startTime.format() # Ditto.
