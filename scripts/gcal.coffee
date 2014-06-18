@@ -55,7 +55,7 @@ module.exports = (robot) ->
         return
       else if (client.calendars) # Parse through busy events...
         user = Object.keys(client.calendars)[0];
-        if (client.calendars[user].busy.length > 0 or client.calendars[vacation_cal].busy.length > 0)
+        if (client.calendars[user].busy.length)
           if (not is_inverted)
             strings = ["#{user} is busy from:"]
             client.calendars[user].busy
@@ -64,6 +64,21 @@ module.exports = (robot) ->
           else # Inverted format.
             strings = "#{user} is busy from: "
             client.calendars[user].busy
+              .forEach (value) ->
+                strings.push(moment(value.start).format("h:mm a") + " until " + moment(value.end).format("h:mm a"))
+
+          # Finally, send the response...
+          msg.send strings.join("\n")
+
+        else if (client.calendars[vacation_cal].busy.length)
+          if (not is_inverted)
+            strings = ["#{user} is busy from:"]
+            client.calendars[vacation_cal].busy
+              .forEach (value) ->
+                strings.push(moment(value.start).format("h:mm a") + " until " + moment(value.end).format("h:mm a"))
+          else # Inverted format.
+            strings = "#{user} is busy from: "
+            client.calendars[vacation_cal].busy
               .forEach (value) ->
                 strings.push(moment(value.start).format("h:mm a") + " until " + moment(value.end).format("h:mm a"))
 
