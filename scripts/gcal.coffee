@@ -97,7 +97,8 @@ module.exports = (robot) ->
 
     details =
       items: [
-        id: ''
+        id: '',
+        id: 'newsint.co.uk_ukm0mhaetii2ga6520s8un906c@group.calendar.google.com'
       ],
       timeMax: endTime.format(), # DateTime in RFC3339 format (I.e., "yyyy-mm-ddThh:mm:ssZ")
       timeMin: startTime.format() # Ditto.
