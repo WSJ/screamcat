@@ -71,7 +71,7 @@ module.exports = (robot) ->
           msg.send strings.join("\n")
 
         else if (client.calendars[vacation_cal].busy.length)
-          msg.send strings.join("#{user} is on vacation, bruv!")
+          msg.send "#{user} is on vacation, bruv!"
 
         else # No events found.
           if (not is_inverted)
