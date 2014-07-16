@@ -24,5 +24,6 @@
 	"isup.coffee",
 	"news.coffee",
 	"likeaboss.coffee",
-	"giphy.coffee"
+	"giphy.coffee",
+        "jenkins.coffee"
 ]
