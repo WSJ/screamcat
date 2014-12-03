@@ -26,8 +26,10 @@ module.exports = (robot) ->
     dataset = robot.brain.get "watchedUrls"
     existing = dataset.filter (value) ->
       return value.url is url
+    console.log existing
+    console.log not existing.length
     if not existing.length
-      console.log('new!')
+      console.log 'new!'
       msg.reply "Okay! Now watching " + returnName(item) + "!"
       jsdom.env {
         url: url,
@@ -41,14 +43,17 @@ module.exports = (robot) ->
           else
             msg.reply "Seems to have Google Analytics! :+1: :shipit: :boom:"
 
-          window.close();
+          window.close()
+          return
       }
       dataset.push item
       robot.brain.set "watchedUrls", dataset
+      return
 
     else
-      console.log('old!')
+      console.log 'old!'
       msg.reply "You're already watching that url!"
+      return
 
   job = new CronJob {
     cronTime: "* */12 * * *"
@@ -60,6 +65,7 @@ module.exports = (robot) ->
             if res.statusCode is 404
               robot.messageRoom "digidev", ":crying_cat_face:Errmahgerrd! "
               +  returnName(item) + " is MISSING!"
+              return
             else
               jsdom.env {
                 url: url,
@@ -69,8 +75,10 @@ module.exports = (robot) ->
                     robot.messageRoom "digidev", ":rage: GRAHHH! "
                     + returnName(item) + " is missing Google Analytics! FFS!"
 
-                  window.close();
+                  window.close()
+                  return
               }
+              return
         catch e
           robot.messageRoom "digidev", ":crying_cat_face:Errmahgerrd! "
           + "an exception was thrown when checking " + returnName(item)
