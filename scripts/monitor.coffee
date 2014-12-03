@@ -27,9 +27,7 @@ module.exports = (robot) ->
     dataset = if dataset then dataset else []
     existing = dataset.filter (value) ->
       return value.url is url
-    console.log not existing.length
-    if not existing.length
-      console.log 'new!'
+    if existing.length is 0
       msg.reply "Okay! Now watching " + returnName(item) + "!"
       jsdom.env {
         url: url,
@@ -51,7 +49,6 @@ module.exports = (robot) ->
       return
 
     else
-      console.log 'old!'
       msg.reply "You're already watching that url!"
       return
 
