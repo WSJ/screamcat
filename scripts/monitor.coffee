@@ -33,6 +33,8 @@ module.exports = (robot) ->
         url: url,
         # scripts: ["http://code.jquery.com/jquery.js"],
         done: (errors, window) ->
+          console.dir errors
+          console.log 'in done'
           if typeof window.ga is "undefined"
             msg.reply ":crying_cat_face: OMG, YOU FORGOT ANALYTICS!"
             msg.reply " *HOW COULD YOU?!?!?!?!?!*"
