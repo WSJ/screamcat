@@ -74,42 +74,43 @@ module.exports = (robot) ->
         else
           return value.nickname is msg.match[1]
 
-    console.dir existing
+    console.dir existing[0]
 
     if existing.length > 0 and typeof existing[0].url not "undefined"
       item = existing[0]
-      url = existing[0].url
-    else
-      msg.reply "That URL doesn't seem to be tracked by me..."
-      return
-    try
-      http.get url, (res) ->
-        if res.statusCode is 404
-          msg.reply ":crying_cat_face:Errmahgerrd! " + returnName(item) + " is MISSING!"
-          return
-        else
-          jsdom.env {
-            url: url
-            features: {
-              FetchExternalResources   : ['script']
-              ProcessExternalResources : ['script']
-            }
-            done: (errors, window) ->
-              console.log 'in jsdom'
-              if typeof window.ga is "undefined"
-                console.log 'no GA'
-                msg.reply ":rage: GRAHHH! " + returnName(item) + " is missing Google Analytics! FFS!"
-              else
-                console.log 'Looks good!'
-                msg.reply returnName(item) + " looks good to me! :+1:"
+      url = item.url
+      try
+        http.get url, (res) ->
+          if res.statusCode is 404
+            msg.reply ":crying_cat_face:Errmahgerrd! " + returnName(item) + " is MISSING!"
+            return
+          else
+            jsdom.env {
+              url: url
+              features: {
+                FetchExternalResources   : ['script']
+                ProcessExternalResources : ['script']
+              }
+              done: (errors, window) ->
+                console.log 'in jsdom'
+                if typeof window.ga is "undefined"
+                  console.log 'no GA'
+                  msg.reply ":rage: GRAHHH! " + returnName(item) + " is missing Google Analytics! FFS!"
+                else
+                  console.log 'Looks good!'
+                  msg.reply returnName(item) + " looks good to me! :+1:"
 
-              window.close()
-              return
-          }
-          return
-    catch e
-      console.log 'exception'
-      msg.reply ":crying_cat_face:Errmahgerrd! " + "an exception was thrown when checking " + returnName(item) + "! Maybe take a look?"
+                window.close()
+                return
+            }
+            return
+      catch e
+        console.log 'exception'
+        msg.reply ":crying_cat_face:Errmahgerrd! " + "an exception was thrown when checking " + returnName(item) + "! Maybe take a look?"
+        return
+
+    else # No results
+      msg.reply "That URL doesn't seem to be tracked by me..."
       return
 
 
