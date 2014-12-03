@@ -23,11 +23,10 @@ module.exports = (robot) ->
     url = if msg.match[1] then msg.match[1] else false
     nickname = if msg.match[2] then msg.match[2] else false
     item = {url: url, nickname: nickname}
-    console.dir(item)
     dataset = robot.brain.get "watchedUrls"
     existing = dataset.filter (value) ->
       return value.url is url
-    if not existing
+    if not existing.length
       msg.reply "Okay! Now watching " + returnName(item) + "!"
       jsdom.env {
         url: url,
