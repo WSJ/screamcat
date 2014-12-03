@@ -60,11 +60,13 @@ module.exports = (robot) ->
 
   robot.respond /check ([^\s]*)/i, (msg) ->
     handle = if msg.match[1] then msg.match[1] else false
-    if handle.match(/^http(s)?:\/\//ig)
+    if handle and handle.match(/http(?:s)?\:\/\//ig)
+      console.log 'url match'
       url = msg.match[1]
     else
       dataset = robot.brain.get "watchedUrls"
       dataset = if dataset then dataset else []
+      console.dir dataset
       existing = dataset.filter (value) ->
         return value.url is url
 
