@@ -70,10 +70,15 @@ module.exports = (robot) ->
 
     if handle and handle.match(/http(?:s)?\:\/\//ig) # Is URL
       existing = dataset.filter (value) ->
+        console.dir value
         return value.url is handle
     else # Is nickname
       existing = dataset.filter (value) ->
+        console.dir value
         return value.nickname is handle
+
+    console.log existing.length
+    console.log existing[0].url
 
     if existing.length > 0 and typeof existing[0].url not "undefined"
       item = existing[0]
