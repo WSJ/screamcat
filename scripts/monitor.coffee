@@ -13,7 +13,7 @@
 #   aendrew
 
 module.exports = (robot) ->
-  jsdom = require("jsdom").defaultDocumentFeatures = {
+  require("jsdom").defaultDocumentFeatures = {
     FetchExternalResources   : ['script'],
     ProcessExternalResources : ['script'],
     MutationEvents           : '2.0',
