@@ -13,11 +13,10 @@
 #   aendrew
 
 module.exports = (robot) ->
-  require("jsdom").defaultDocumentFeatures = {
-    FetchExternalResources   : ['script'],
-    ProcessExternalResources : ['script'],
-    MutationEvents           : '2.0',
-    QuerySelector            : false
+  jsdom = require("jsdom")
+  jsdom.defaultDocumentFeatures = {
+    FetchExternalResources   : ['script']
+    ProcessExternalResources : true
   }
 
   CronJob = require("cron").CronJob
