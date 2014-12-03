@@ -14,10 +14,6 @@
 
 module.exports = (robot) ->
   jsdom = require("jsdom")
-  jsdom.defaultDocumentFeatures = {
-    FetchExternalResources   : ['script']
-    ProcessExternalResources : ['script']
-  }
 
   CronJob = require("cron").CronJob
   http = require("http")
@@ -88,20 +84,22 @@ module.exports = (robot) ->
         else
           console.log 'about to try jsdom'
           jsdom.env(
-            url
-            ["http://code.jquery.com/jquery.js"]
-            (errors, window) ->
+            url: url
+            features: {
+              FetchExternalResources   : ['script']
+              ProcessExternalResources : ['script']
+            }
+            done: (errors, window) ->
               console.log 'in jsdom'
-              window.addEventListener 'load', ->
-                console.log 'in load'
-                if typeof window.ga is "undefined"
-                  msg.reply ":rage: GRAHHH! " + returnName(item)
-                  + " is missing Google Analytics! FFS!"
-                else
-                  msg.reply "Looks good to me! :+1:"
+              console.dir([errors, window])
+              if typeof window.ga is "undefined"
+                msg.reply ":rage: GRAHHH! " + returnName(item)
+                + " is missing Google Analytics! FFS!"
+              else
+                msg.reply "Looks good to me! :+1:"
 
-                window.close()
-                return
+              window.close()
+              return
           )
           return
     catch e
