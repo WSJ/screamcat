@@ -31,6 +31,7 @@
     "hubot-slack": "~2.0.0",
     "jsdom": "^0.2.14",
     "moment": "~2.5.1",
+    "redis": "^0.12.1",
     "soupselect": "0.2.0",
     "underscore": "1.3.3"
   }
