@@ -29,23 +29,23 @@ module.exports = (robot) ->
       return value.url is url
     if existing.length is 0
       msg.reply "Okay! Now watching " + returnName(item) + "!"
-      jsdom.env {
-        url: url,
-        # scripts: ["http://code.jquery.com/jquery.js"],
-        done: (errors, window) ->
+      jsdom.env(
+        url
+        ["http://code.jquery.com/jquery.js"]
+        (errors, window) ->
           console.dir errors
           console.log 'in done'
           if typeof window.ga is "undefined"
             msg.reply ":crying_cat_face: OMG, YOU FORGOT ANALYTICS!"
             msg.reply " *HOW COULD YOU?!?!?!?!?!*"
             if msg.message.user.name.match /aendrew/ig
-              msg.reply "AND, LIKE, C'MON — I EXPECT BETTER FROM YOU!"
+              msg.reply "AND, LIKE — C'MON, MAN! I EXPECT BETTER FROM YOU!"
           else
             msg.reply "Seems to have Google Analytics! :+1: :shipit: :boom:"
 
           window.close()
           return
-      }
+      )
       dataset.push item
       console.log dataset
       robot.brain.set "watchedUrls", dataset
