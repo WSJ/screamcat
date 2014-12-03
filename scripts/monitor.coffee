@@ -82,7 +82,6 @@ module.exports = (robot) ->
           +  returnName(item) + " is MISSING!"
           return
         else
-          console.log 'about to try jsdom'
           jsdom.env(
             url: url
             features: {
@@ -91,11 +90,12 @@ module.exports = (robot) ->
             }
             done: (errors, window) ->
               console.log 'in jsdom'
-              console.dir([errors, window])
               if typeof window.ga is "undefined"
+                console.log 'No GA!'
                 msg.reply ":rage: GRAHHH! " + returnName(item)
                 + " is missing Google Analytics! FFS!"
               else
+                console.log 'Looks good!'
                 msg.reply "Looks good to me! :+1:"
 
               window.close()
