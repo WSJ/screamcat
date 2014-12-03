@@ -13,7 +13,7 @@ module.exports = (robot) ->
   CronJob = require("cron").CronJob
   http = require("http")
 
-  returnName (item) ->
+  returnName = (item) ->
     if item.nickname
       return item.nickname  + " (" + item.url + ")"
     else
