@@ -74,7 +74,7 @@ module.exports = (robot) ->
         else
           return value.nickname is msg.match[1]
 
-    console.dir existing[0]
+    console.dir returnName(existing[0])
 
     if existing.length > 0 and typeof existing[0].url not "undefined"
       item = existing[0]
