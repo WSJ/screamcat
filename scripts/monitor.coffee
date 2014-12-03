@@ -19,7 +19,7 @@ module.exports = (robot) ->
     else
       return item.url
 
-  robot.respond /watch ([^\s]*?)(\s[^\s]*?)?/i, (msg) ->
+  robot.respond /watch ([^\s]*)(?:\s([^\s]*))?/i, (msg) ->
     url = if msg.match[1] then msg.match[1] else false
     nickname = if msg.match[2] then msg.match[2] else false
     item = {url: url, nickname: nickname}
