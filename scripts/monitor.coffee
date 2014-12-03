@@ -66,6 +66,7 @@ module.exports = (robot) ->
     dataset = robot.brain.get "watchedUrls"
     dataset = if dataset then dataset else []
     item = {}
+    existing = []
 
     if handle and handle.match(/http(?:s)?\:\/\//ig) # Is URL
       existing = dataset.filter (value) ->
@@ -74,10 +75,9 @@ module.exports = (robot) ->
       existing = dataset.filter (value) ->
         return value.nickname is handle
 
-    console.dir existing
-
     if existing.length > 0 and typeof existing[0].url not "undefined"
       item = existing[0]
+      console.dir(item)
       url = existing[0].url
     else
       msg.reply "That URL doesn't seem to be tracked by me..."
