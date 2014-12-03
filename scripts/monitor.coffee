@@ -27,6 +27,7 @@ module.exports = (robot) ->
     existing = dataset.filter (value) ->
       return value.url is url
     if not existing.length
+      console.log('new!')
       msg.reply "Okay! Now watching " + returnName(item) + "!"
       jsdom.env {
         url: url,
@@ -45,8 +46,8 @@ module.exports = (robot) ->
       dataset.push item
       robot.brain.set "watchedUrls", dataset
 
-
     else
+      console.log('old!')
       msg.reply "You're already watching that url!"
 
   job = new CronJob {
