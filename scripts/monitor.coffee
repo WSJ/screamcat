@@ -91,9 +91,7 @@ module.exports = (robot) ->
             done: (errors, window) ->
               console.log 'in jsdom'
               if typeof window.ga is "undefined"
-                console.log 'No GA!'
-                msg.reply ":rage: GRAHHH! " + returnName(item)
-                + " is missing Google Analytics! FFS!"
+                msg.reply ":rage: GRAHHH! " + returnName(item) + " is missing Google Analytics! FFS!"
               else
                 console.log 'Looks good!'
                 msg.reply "Looks good to me! :+1:"
