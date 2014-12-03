@@ -14,7 +14,6 @@
 
 module.exports = (robot) ->
   jsdom = require("jsdom")
-
   CronJob = require("cron").CronJob
   http = require("http")
 
@@ -34,23 +33,25 @@ module.exports = (robot) ->
       return value.url is url
     if existing.length is 0
       msg.reply "Okay! Now watching " + returnName(item) + "!"
-      jsdom.env(
-        url
-        ["http://code.jquery.com/jquery.js"]
-        (errors, window) ->
+      jsdom.env {
+        url: url
+        features: {
+          FetchExternalResources   : ['script']
+          ProcessExternalResources : ['script']
+        }
+        done: (errors, window) ->
           strings = []
-          window.addEventListener 'load', ->
-            if typeof window.ga is "undefined"
-              strings.push ":crying_cat_face: OMG, YOU FORGOT ANALYTICS!"
-              strings.push " *HOW COULD YOU?!?!?!?!?!*"
-              if msg.message.user.name.match /aendrew/ig
-                strings.push "AND, LIKE — C'MON, MAN! I EXPECT BETTER FROM YOU!"
-            else
-              strings.push "Seems to have Google Analytics! :+1::shipit::boom:"
+          if typeof window.ga is "undefined"
+            strings.push ":crying_cat_face: OMG, YOU FORGOT ANALYTICS!"
+            strings.push " *HOW COULD YOU?!?!?!?!?!*"
+            if msg.message.user.name.match /aendrew/ig
+              strings.push "AND, LIKE — C'MON, MAN! I EXPECT BETTER FROM YOU!"
+          else
+            strings.push "Seems to have Google Analytics! :+1::shipit::boom:"
 
-            msg.reply strings.join("\n")
-            window.close()
-            return
+          msg.reply strings.join("\n")
+          window.close()
+          return
       )
       dataset.push item
       robot.brain.set "watchedUrls", dataset
@@ -82,7 +83,7 @@ module.exports = (robot) ->
           +  returnName(item) + " is MISSING!"
           return
         else
-          jsdom.env(
+          jsdom.env {
             url: url
             features: {
               FetchExternalResources   : ['script']
@@ -98,7 +99,7 @@ module.exports = (robot) ->
 
               window.close()
               return
-          )
+          }
           return
     catch e
       console.log 'exception'
@@ -116,26 +117,23 @@ module.exports = (robot) ->
         try
           http.get item.url, (res) ->
             if res.statusCode is 404
-              robot.messageRoom "digidev", ":crying_cat_face:Errmahgerrd! "
-              +  returnName(item) + " is MISSING!"
+              robot.messageRoom "digidev", ":crying_cat_face:Errmahgerrd! " +  returnName(item) + " is MISSING!"
               return
             else
-              jsdom.env(
-                item.url
-                ["http://code.jquery.com/jquery.js"]
-                (errors, window) ->
-                  window.addEventListener 'load', ->
-                    if typeof window.ga is "undefined"
-                      robot.messageRoom "digidev", ":rage: GRAHHH! "
-                      + returnName(item) + " is missing Google Analytics! FFS!"
-
-                    window.close()
-                    return
+              jsdom.env {
+                url: item.url
+                features: {
+                  FetchExternalResources   : ['script']
+                  ProcessExternalResources : ['script']
+                }
+                done: (errors, window) ->
+                  if typeof window.ga is "undefined"
+                    robot.messageRoom "digidev", ":rage: GRAHHH! " + returnName(item) + " is missing Google Analytics! FFS!"
+                  window.close()
+                  return
               )
               return
         catch e
-          robot.messageRoom "digidev", ":crying_cat_face:Errmahgerrd! "
-          + "an exception was thrown when checking " + returnName(item)
-          + "! Maybe take a look?"
+          robot.messageRoom "digidev", ":crying_cat_face:Errmahgerrd! " + "an exception was thrown when checking " + returnName(item) + "! Maybe take a look?"
     start: true
   }
