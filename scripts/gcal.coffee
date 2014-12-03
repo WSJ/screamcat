@@ -35,12 +35,12 @@
 #            grant_type=authorization_code
 #     7. The JSON response returned will include your access and refresh tokens
 #
-# Commands:
-#   hubot is {Slack username or Email} busy at 12:00 pm?
-#
 # ToDo:
 #   + Add more ability to use either "busy" or its inverse "available".
 #   + Add ranges for time slots.
+#
+# Commands:
+#   hubot is {Slack username or Email} busy at 12:00 pm?
 #
 # Author:
 #   aendrew, based on gcal.coffee by lazerwalker
