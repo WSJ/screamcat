@@ -77,8 +77,10 @@ module.exports = (robot) ->
         return
 
     console.log url
+
     try
       http.get url, (res) ->
+        console.dir res
         if res.statusCode is 404
           msg.reply ":crying_cat_face:Errmahgerrd! "
           +  returnName(item) + " is MISSING!"
@@ -97,6 +99,7 @@ module.exports = (robot) ->
           }
           return
     catch e
+      console.dir e
       msg.reply ":crying_cat_face:Errmahgerrd! "
       + "an exception was thrown when checking " + returnName(item)
       + "! Maybe take a look?"
