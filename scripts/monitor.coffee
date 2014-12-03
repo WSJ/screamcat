@@ -23,11 +23,11 @@ module.exports = (robot) ->
     url = if msg.match[1] then msg.match[1] else false
     nickname = if msg.match[2] then msg.match[2] else false
     item = {url: url, nickname: nickname}
+    console.dir item
     dataset = robot.brain.get "watchedUrls"
+    console.dir dataset
     existing = dataset.filter (value) ->
       return value.url is url
-    console.log existing
-    console.log not existing.length
     if not existing.length
       console.log 'new!'
       msg.reply "Okay! Now watching " + returnName(item) + "!"
