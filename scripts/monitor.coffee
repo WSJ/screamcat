@@ -74,11 +74,12 @@ module.exports = (robot) ->
         else
           return value.nickname is msg.match[1]
 
-    console.dir returnName(existing[0])
+    console.log typeof returnName
 
     if existing.length > 0 and typeof existing[0].url not "undefined"
       item = existing[0]
       url = item.url
+      console.dir([item, url])
       try
         http.get url, (res) ->
           if res.statusCode is 404
