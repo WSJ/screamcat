@@ -66,9 +66,10 @@ module.exports = (robot) ->
     else
       dataset = robot.brain.get "watchedUrls"
       dataset = if dataset then dataset else []
+      console.dir dataset
       existing = dataset.filter (value) ->
         return value.url is url
-
+      console.dir existing
       if existing.length > 0 and typeof existing[0].url not "undefined"
         url = existing[0].url
       else
@@ -88,6 +89,7 @@ module.exports = (robot) ->
             ["http://code.jquery.com/jquery.js"]
             (errors, window) ->
               window.addEventListener 'load', ->
+                console.log 'in load'
                 if typeof window.ga is "undefined"
                   msg.reply ":rage: GRAHHH! " + returnName(item)
                   + " is missing Google Analytics! FFS!"
