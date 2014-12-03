@@ -65,6 +65,7 @@ module.exports = (robot) ->
     handle = if msg.match[1] then msg.match[1] else false
     dataset = robot.brain.get "watchedUrls"
     dataset = if dataset then dataset else []
+    item = {}
 
     if handle and handle.match(/http(?:s)?\:\/\//ig) # Is URL
       existing = dataset.filter (value) ->
@@ -72,6 +73,8 @@ module.exports = (robot) ->
     else # Is nickname
       existing = dataset.filter (value) ->
         return value.nickname is handle
+
+    console.dir existing
 
     if existing.length > 0 and typeof existing[0].url not "undefined"
       item = existing[0]
