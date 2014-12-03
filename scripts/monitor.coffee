@@ -5,6 +5,10 @@
 #   cron
 #   jsdom
 #
+# Commands:
+#   hubot watch {url} ({nickname})
+#   hubot check {url or nickname}
+#
 # Author:
 #   aendrew
 
@@ -33,27 +37,68 @@ module.exports = (robot) ->
         url
         ["http://code.jquery.com/jquery.js"]
         (errors, window) ->
-          console.dir errors
-          console.log 'in done'
+          strings = []
           if typeof window.ga is "undefined"
-            msg.reply ":crying_cat_face: OMG, YOU FORGOT ANALYTICS!"
-            msg.reply " *HOW COULD YOU?!?!?!?!?!*"
+            strings.push ":crying_cat_face: OMG, YOU FORGOT ANALYTICS!"
+            strings.push " *HOW COULD YOU?!?!?!?!?!*"
             if msg.message.user.name.match /aendrew/ig
-              msg.reply "AND, LIKE — C'MON, MAN! I EXPECT BETTER FROM YOU!"
+              strings.push "AND, LIKE — C'MON, MAN! I EXPECT BETTER FROM YOU!"
           else
-            msg.reply "Seems to have Google Analytics! :+1: :shipit: :boom:"
+            strings.push "Seems to have Google Analytics! :+1: :shipit: :boom:"
 
+          msg.reply strings.join("\n")
           window.close()
           return
       )
       dataset.push item
-      console.log dataset
       robot.brain.set "watchedUrls", dataset
       return
 
     else
       msg.reply "You're already watching that url!"
       return
+
+  robot.respond /check ([^\s]*)/i, (msg) ->
+    handle = if msg.match[1] then msg.match[1] else false
+    if handle.match(/^http(s)?:\/\//ig)
+      url = msg.match[1]
+    else
+      dataset = robot.brain.get "watchedUrls"
+      dataset = if dataset then dataset else []
+      existing = dataset.filter (value) ->
+        return value.url is url
+
+      if existing.length > 0 and typeof existing[0].url not "undefined"
+        url = existing[0].url
+      else
+        msg.reply "That URL doesn't seem to be tracked by me..."
+        return
+
+    try
+      http.get url, (res) ->
+        if res.statusCode is 404
+          msg.reply ":crying_cat_face:Errmahgerrd! "
+          +  returnName(item) + " is MISSING!"
+          return
+        else
+          jsdom.env {
+            url: url,
+            # scripts: ["http://code.jquery.com/jquery.js"],
+            done: (errors, window) ->
+              if typeof window.ga is "undefined"
+                msg.reply ":rage: GRAHHH! "
+                + returnName(item) + " is missing Google Analytics! FFS!"
+
+              window.close()
+              return
+          }
+          return
+    catch e
+      msg.reply ":crying_cat_face:Errmahgerrd! "
+      + "an exception was thrown when checking " + returnName(item)
+      + "! Maybe take a look?"
+      return
+
 
   job = new CronJob {
     cronTime: "* */12 * * *"
@@ -68,7 +113,7 @@ module.exports = (robot) ->
               return
             else
               jsdom.env {
-                url: url,
+                url: item.url,
                 # scripts: ["http://code.jquery.com/jquery.js"],
                 done: (errors, window) ->
                   if typeof window.ga is "undefined"
