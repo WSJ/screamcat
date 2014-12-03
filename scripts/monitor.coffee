@@ -38,17 +38,18 @@ module.exports = (robot) ->
         ["http://code.jquery.com/jquery.js"]
         (errors, window) ->
           strings = []
-          if typeof window.ga is "undefined"
-            strings.push ":crying_cat_face: OMG, YOU FORGOT ANALYTICS!"
-            strings.push " *HOW COULD YOU?!?!?!?!?!*"
-            if msg.message.user.name.match /aendrew/ig
-              strings.push "AND, LIKE — C'MON, MAN! I EXPECT BETTER FROM YOU!"
-          else
-            strings.push "Seems to have Google Analytics! :+1: :shipit: :boom:"
+          window.addEventListener 'load', ->
+            if typeof window.ga is "undefined"
+              strings.push ":crying_cat_face: OMG, YOU FORGOT ANALYTICS!"
+              strings.push " *HOW COULD YOU?!?!?!?!?!*"
+              if msg.message.user.name.match /aendrew/ig
+                strings.push "AND, LIKE — C'MON, MAN! I EXPECT BETTER FROM YOU!"
+            else
+              strings.push "Seems to have Google Analytics! :+1::shipit::boom:"
 
-          msg.reply strings.join("\n")
-          window.close()
-          return
+            msg.reply strings.join("\n")
+            window.close()
+            return
       )
       dataset.push item
       robot.brain.set "watchedUrls", dataset
@@ -86,14 +87,15 @@ module.exports = (robot) ->
             url
             ["http://code.jquery.com/jquery.js"]
             (errors, window) ->
-              console.log 'in done'
-              if typeof window.ga is "undefined"
-                msg.reply ":rage: GRAHHH! "
-                + returnName(item) + " is missing Google Analytics! FFS!"
-              else
-                msg.reply "Looks good to me! :+1:"
-              window.close()
-              return
+              window.addEventListener 'load', ->
+                if typeof window.ga is "undefined"
+                  msg.reply ":rage: GRAHHH! " + returnName(item)
+                  + " is missing Google Analytics! FFS!"
+                else
+                  msg.reply "Looks good to me! :+1:"
+
+                window.close()
+                return
           )
           return
     catch e
@@ -119,12 +121,13 @@ module.exports = (robot) ->
                 url: item.url,
                 # scripts: ["http://code.jquery.com/jquery.js"],
                 done: (errors, window) ->
-                  if typeof window.ga is "undefined"
-                    robot.messageRoom "digidev", ":rage: GRAHHH! "
-                    + returnName(item) + " is missing Google Analytics! FFS!"
+                  window.addEventListener 'load', ->
+                    if typeof window.ga is "undefined"
+                      robot.messageRoom "digidev", ":rage: GRAHHH! "
+                      + returnName(item) + " is missing Google Analytics! FFS!"
 
-                  window.close()
-                  return
+                    window.close()
+                    return
               }
               return
         catch e
