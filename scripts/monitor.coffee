@@ -68,6 +68,7 @@ module.exports = (robot) ->
       dataset = if dataset then dataset else []
       console.dir dataset
       existing = dataset.filter (value) ->
+        console.dir [value.url, url]
         return value.url is url
       console.dir existing
       if existing.length > 0 and typeof existing[0].url not "undefined"
@@ -82,12 +83,13 @@ module.exports = (robot) ->
           msg.reply ":crying_cat_face:Errmahgerrd! "
           +  returnName(item) + " is MISSING!"
           return
-
         else
+          console.log 'about to try jsdom'
           jsdom.env(
             url
             ["http://code.jquery.com/jquery.js"]
             (errors, window) ->
+              console.log 'in done'
               window.addEventListener 'load', ->
                 console.log 'in load'
                 if typeof window.ga is "undefined"
@@ -101,6 +103,7 @@ module.exports = (robot) ->
           )
           return
     catch e
+      console.log 'exception'
       msg.reply ":crying_cat_face:Errmahgerrd! "
       + "an exception was thrown when checking " + returnName(item)
       + "! Maybe take a look?"
