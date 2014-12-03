@@ -79,7 +79,7 @@ module.exports = (robot) ->
     else
       msg.reply "That URL doesn't seem to be tracked by me..."
       return
-
+    console.dir(item)
     try
       http.get url, (res) ->
         if res.statusCode is 404
