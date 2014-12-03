@@ -86,11 +86,12 @@ module.exports = (robot) ->
           +  returnName(item) + " is MISSING!"
           return
         else
+          console.log 'about to try jsdom'
           jsdom.env(
             url
             ["http://code.jquery.com/jquery.js"]
             (errors, window) ->
-              console.log 'about to try load'
+              console.log 'in jsdom'
               window.addEventListener 'load', ->
                 console.log 'in load'
                 if typeof window.ga is "undefined"
