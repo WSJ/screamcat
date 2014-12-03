@@ -16,7 +16,7 @@ module.exports = (robot) ->
   jsdom = require("jsdom")
   jsdom.defaultDocumentFeatures = {
     FetchExternalResources   : ['script']
-    ProcessExternalResources : true
+    ProcessExternalResources : ['script']
   }
 
   CronJob = require("cron").CronJob
