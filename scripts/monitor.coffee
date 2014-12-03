@@ -52,7 +52,7 @@ module.exports = (robot) ->
           msg.reply strings.join("\n")
           window.close()
           return
-      )
+      }
       dataset.push item
       robot.brain.set "watchedUrls", dataset
       return
@@ -131,7 +131,7 @@ module.exports = (robot) ->
                     robot.messageRoom "digidev", ":rage: GRAHHH! " + returnName(item) + " is missing Google Analytics! FFS!"
                   window.close()
                   return
-              )
+              }
               return
         catch e
           robot.messageRoom "digidev", ":crying_cat_face:Errmahgerrd! " + "an exception was thrown when checking " + returnName(item) + "! Maybe take a look?"
