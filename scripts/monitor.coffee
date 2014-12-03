@@ -1,5 +1,5 @@
 # Description:
-#   Monitors given interactives for analytics and uptime.
+#   Monitors given interactives for analytics and uptime. Needs refactoring.
 #
 # Dependencies:
 #   cron
@@ -76,34 +76,29 @@ module.exports = (robot) ->
         msg.reply "That URL doesn't seem to be tracked by me..."
         return
 
-    console.log url
-
     try
       http.get url, (res) ->
-        console.log res.statusCode
-
         if res.statusCode is 404
-          console.log 404
           msg.reply ":crying_cat_face:Errmahgerrd! "
           +  returnName(item) + " is MISSING!"
           return
 
         else
-          jsdom.env {
-            url: url,
-            # scripts: ["http://code.jquery.com/jquery.js"],
-            done: (errors, window) ->
+          jsdom.env(
+            url
+            ["http://code.jquery.com/jquery.js"]
+            (errors, window) ->
               console.log 'in done'
               if typeof window.ga is "undefined"
                 msg.reply ":rage: GRAHHH! "
                 + returnName(item) + " is missing Google Analytics! FFS!"
-
+              else
+                msg.reply "Looks good to me! :+1:"
               window.close()
               return
-          }
+          )
           return
     catch e
-      console.dir e
       msg.reply ":crying_cat_face:Errmahgerrd! "
       + "an exception was thrown when checking " + returnName(item)
       + "! Maybe take a look?"
