@@ -63,25 +63,27 @@ module.exports = (robot) ->
 
   robot.respond /check ([^\s]*)/i, (msg) ->
     handle = if msg.match[1] then msg.match[1] else false
-    if handle and handle.match(/http(?:s)?\:\/\//ig)
-      url = handle
-    else
-      dataset = robot.brain.get "watchedUrls"
-      dataset = if dataset then dataset else []
+    dataset = robot.brain.get "watchedUrls"
+    dataset = if dataset then dataset else []
+
+    if handle and handle.match(/http(?:s)?\:\/\//ig) # Is URL
+      existing = dataset.filter (value) ->
+        return value.url is handle
+    else # Is nickname
       existing = dataset.filter (value) ->
         return value.nickname is handle
+
+    if existing.length > 0 and typeof existing[0].url not "undefined"
       item = existing[0]
-      if existing.length > 0 and typeof existing[0].url not "undefined"
-        url = existing[0].url
-      else
-        msg.reply "That URL doesn't seem to be tracked by me..."
-        return
+      url = existing[0].url
+    else
+      msg.reply "That URL doesn't seem to be tracked by me..."
+      return
 
     try
       http.get url, (res) ->
         if res.statusCode is 404
-          msg.reply ":crying_cat_face:Errmahgerrd! "
-          +  returnName(item) + " is MISSING!"
+          msg.reply ":crying_cat_face:Errmahgerrd! " + returnName(item) + " is MISSING!"
           return
         else
           jsdom.env {
@@ -94,10 +96,10 @@ module.exports = (robot) ->
               console.log 'in jsdom'
               if typeof window.ga is "undefined"
                 console.log 'no GA'
-                msg.reply ":rage: GRAHHH! " + url + " is missing Google Analytics! FFS!"
+                msg.reply ":rage: GRAHHH! " + returnName(item) + " is missing Google Analytics! FFS!"
               else
                 console.log 'Looks good!'
-                msg.reply "Looks good to me! :+1:"
+                msg.reply returnName(item) + " looks good to me! :+1:"
 
               window.close()
               return
