@@ -45,6 +45,7 @@ module.exports = (robot) ->
           return
       }
       dataset.push item
+      console.log dataset
       robot.brain.set "watchedUrls", dataset
       return
 
