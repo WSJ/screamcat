@@ -91,7 +91,9 @@ module.exports = (robot) ->
             url
             ["http://code.jquery.com/jquery.js"]
             (errors, window) ->
+              console.log 'about to try load'
               window.addEventListener 'load', ->
+                console.log 'in load'
                 if typeof window.ga is "undefined"
                   msg.reply ":rage: GRAHHH! " + returnName(item)
                   + " is missing Google Analytics! FFS!"
