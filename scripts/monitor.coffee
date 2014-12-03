@@ -70,6 +70,7 @@ module.exports = (robot) ->
       dataset = if dataset then dataset else []
       existing = dataset.filter (value) ->
         return value.nickname is handle
+      item = existing[0]
       if existing.length > 0 and typeof existing[0].url not "undefined"
         url = existing[0].url
       else
@@ -92,6 +93,7 @@ module.exports = (robot) ->
             done: (errors, window) ->
               console.log 'in jsdom'
               if typeof window.ga is "undefined"
+                console.log
                 msg.reply ":rage: GRAHHH! " + returnName(item) + " is missing Google Analytics! FFS!"
               else
                 console.log 'Looks good!'
@@ -103,9 +105,7 @@ module.exports = (robot) ->
           return
     catch e
       console.log 'exception'
-      msg.reply ":crying_cat_face:Errmahgerrd! "
-      + "an exception was thrown when checking " + returnName(item)
-      + "! Maybe take a look?"
+      msg.reply ":crying_cat_face:Errmahgerrd! " + "an exception was thrown when checking " + returnName(item) + "! Maybe take a look?"
       return
 
 
