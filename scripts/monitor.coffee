@@ -80,16 +80,20 @@ module.exports = (robot) ->
 
     try
       http.get url, (res) ->
-        console.dir res
+        console.log res.statusCode
+
         if res.statusCode is 404
+          console.log 404
           msg.reply ":crying_cat_face:Errmahgerrd! "
           +  returnName(item) + " is MISSING!"
           return
+
         else
           jsdom.env {
             url: url,
             # scripts: ["http://code.jquery.com/jquery.js"],
             done: (errors, window) ->
+              console.log 'in done'
               if typeof window.ga is "undefined"
                 msg.reply ":rage: GRAHHH! "
                 + returnName(item) + " is missing Google Analytics! FFS!"
