@@ -55,7 +55,7 @@ module.exports = (robot) ->
       return
 
     else
-      msg.reply "You're already watching that url!"
+      msg.reply "I'm already watching that url!"
       return
 
   robot.respond /check ([^\s]*)/i, (msg) ->
@@ -74,6 +74,7 @@ module.exports = (robot) ->
         msg.reply "That URL doesn't seem to be tracked by me..."
         return
 
+    console.log url
     try
       http.get url, (res) ->
         if res.statusCode is 404
