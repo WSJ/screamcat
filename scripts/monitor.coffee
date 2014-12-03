@@ -62,32 +62,26 @@ module.exports = (robot) ->
       return
 
   robot.respond /check ([^\s]*)/i, (msg) ->
-    handle = if msg.match[1] then msg.match[1] else false
     dataset = robot.brain.get "watchedUrls"
     dataset = if dataset then dataset else []
     item = {}
     existing = []
 
-    if handle and handle.match(/http(?:s)?\:\/\//ig) # Is URL
+    if msg.match[1]
       existing = dataset.filter (value) ->
-        console.dir value
-        return value.url is handle
-    else # Is nickname
-      existing = dataset.filter (value) ->
-        console.dir value
-        return value.nickname is handle
+        if handle.match(/http(?:s)?\:\/\//ig)
+          return value.url is msg.match[1]
+        else
+          return value.nickname is msg.match[1]
 
-    console.log existing.length
-    console.log existing[0].url
+    console.dir existing
 
     if existing.length > 0 and typeof existing[0].url not "undefined"
       item = existing[0]
-      console.dir(item)
       url = existing[0].url
     else
       msg.reply "That URL doesn't seem to be tracked by me..."
       return
-    console.dir(item)
     try
       http.get url, (res) ->
         if res.statusCode is 404
