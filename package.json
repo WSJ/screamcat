@@ -8,6 +8,9 @@
     "campfire",
     "bot"
   ],
+  "coffeelintConfig": {
+    "max_line_length": "false"
+  },
   "description": "A simple helpful robot for your Company",
   "licenses": [
     {

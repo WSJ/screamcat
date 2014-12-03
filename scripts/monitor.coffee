@@ -76,9 +76,7 @@ module.exports = (robot) ->
 
     if existing[0]
       item = existing[0]
-      console.log(existing[0])
       url = item.url
-      console.dir([item, url])
       try
         http.get url, (res) ->
           if res.statusCode is 404
@@ -92,12 +90,9 @@ module.exports = (robot) ->
                 ProcessExternalResources : ['script']
               }
               done: (errors, window) ->
-                console.log 'in jsdom'
                 if typeof window.ga is "undefined"
-                  console.log 'no GA'
                   msg.reply ":rage: GRAHHH! " + returnName(item) + " is missing Google Analytics! FFS!"
                 else
-                  console.log 'Looks good!'
                   msg.reply returnName(item) + " looks good to me! :+1:"
 
                 window.close()
@@ -105,7 +100,6 @@ module.exports = (robot) ->
             }
             return
       catch e
-        console.log 'exception'
         msg.reply ":crying_cat_face:Errmahgerrd! " + "an exception was thrown when checking " + returnName(item) + "! Maybe take a look?"
         return
 
@@ -113,10 +107,10 @@ module.exports = (robot) ->
       msg.reply "That URL doesn't seem to be tracked by me..."
       return
 
-
   job = new CronJob {
     cronTime: "* */12 * * *"
     onTick: ->
+      console.log '!!!!!!CRON RUNNING!!!!!!'
       dataset = robot.brain.get "watchedUrls"
       for item in dataset
         try
