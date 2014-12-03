@@ -13,7 +13,13 @@
 #   aendrew
 
 module.exports = (robot) ->
-  jsdom = require("jsdom")
+  jsdom = require("jsdom").defaultDocumentFeatures = {
+    FetchExternalResources   : ['script'],
+    ProcessExternalResources : ['script'],
+    MutationEvents           : '2.0',
+    QuerySelector            : false
+  }
+
   CronJob = require("cron").CronJob
   http = require("http")
 
@@ -62,14 +68,12 @@ module.exports = (robot) ->
   robot.respond /check ([^\s]*)/i, (msg) ->
     handle = if msg.match[1] then msg.match[1] else false
     if handle and handle.match(/http(?:s)?\:\/\//ig)
-      url = msg.match[1]
+      url = handle
     else
       dataset = robot.brain.get "watchedUrls"
       dataset = if dataset then dataset else []
-      console.dir dataset
       existing = dataset.filter (value) ->
         return value.nickname is handle
-      console.dir existing
       if existing.length > 0 and typeof existing[0].url not "undefined"
         url = existing[0].url
       else
@@ -83,14 +87,11 @@ module.exports = (robot) ->
           +  returnName(item) + " is MISSING!"
           return
         else
-          console.log 'about to try jsdom'
           jsdom.env(
             url
             ["http://code.jquery.com/jquery.js"]
             (errors, window) ->
-              console.log 'in done'
               window.addEventListener 'load', ->
-                console.log 'in load'
                 if typeof window.ga is "undefined"
                   msg.reply ":rage: GRAHHH! " + returnName(item)
                   + " is missing Google Analytics! FFS!"
@@ -121,10 +122,10 @@ module.exports = (robot) ->
               +  returnName(item) + " is MISSING!"
               return
             else
-              jsdom.env {
-                url: item.url,
-                # scripts: ["http://code.jquery.com/jquery.js"],
-                done: (errors, window) ->
+              jsdom.env(
+                item.url
+                ["http://code.jquery.com/jquery.js"]
+                (errors, window) ->
                   window.addEventListener 'load', ->
                     if typeof window.ga is "undefined"
                       robot.messageRoom "digidev", ":rage: GRAHHH! "
@@ -132,7 +133,7 @@ module.exports = (robot) ->
 
                     window.close()
                     return
-              }
+              )
               return
         catch e
           robot.messageRoom "digidev", ":crying_cat_face:Errmahgerrd! "
