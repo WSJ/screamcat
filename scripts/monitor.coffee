@@ -68,8 +68,7 @@ module.exports = (robot) ->
       dataset = if dataset then dataset else []
       console.dir dataset
       existing = dataset.filter (value) ->
-        console.dir [value.url, url]
-        return value.url is url
+        return value.nickname is handle
       console.dir existing
       if existing.length > 0 and typeof existing[0].url not "undefined"
         url = existing[0].url
