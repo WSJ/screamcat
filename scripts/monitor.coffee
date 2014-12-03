@@ -69,7 +69,7 @@ module.exports = (robot) ->
 
     if msg.match[1]
       existing = dataset.filter (value) ->
-        if handle.match(/http(?:s)?\:\/\//ig)
+        if msg.match[1].match(/http(?:s)?\:\/\//ig)
           return value.url is msg.match[1]
         else
           return value.nickname is msg.match[1]
